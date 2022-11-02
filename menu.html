@@ -1,0 +1,72 @@
+<nav class="navbar navbar-expand-lg bg-secondary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <img src="imgs/logo.png" style="width: 150px" />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" href="home.html"> Home </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="create.html"> Nuevo personaje </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="edit.html"> Modificar personajes </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Series
+          </a>
+          <ul class="dropdown-menu" id="enlaces"></ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  var urlPS = "https://apiseriespersonajes2022.azurewebsites.net";
+
+  function cargarMenu() {
+    var request = "/api/series";
+    var url = urlPS + request;
+
+    $.ajax({
+      url: url,
+      method: "GET",
+      dataType: "json",
+      success: function (data) {
+        $.each(data, function (index, serie) {
+          var li = $("<li>");
+          var a = $("<a>", {
+            href: "serie.html?idserie=" + serie.idSerie,
+            text: serie.nombre,
+          });
+          li.append(a);
+
+          $("#enlaces").append(li);
+        });
+      },
+    });
+  }
+  $(document).ready(function () {
+    cargarMenu();
+  });
+</script>

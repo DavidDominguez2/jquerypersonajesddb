@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="menu"></div>
+    <h1>Nuevo Personaje</h1>
+    <div>
+      <label>Nombre:</label>
+      <input type="text" id="nombre" />
+      <label>Imagen:</label>
+      <input type="text" id="imagen" />
+      <label>Serie: </label>
+      <select id="series"></select>
+      <button class="btn btn-primary" id="createPersonaje">
+        Insertar Personaje
+      </button>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script>
+      var urlPS = "https://apiseriespersonajes2022.azurewebsites.net";
+
+      function getJsonPersonaje() {
+        var nombre = $("#nombre").val();
+        var imagen = $("#imagen").val();
+        var serie = $("#series").val();
+
+        var personaje = new Object();
+        personaje.idPersonaje = 0;
+        personaje.nombre = nombre;
+        personaje.imagen = imagen;
+        personaje.idSerie = parseInt(serie);
+
+        var dataJson = JSON.stringify(personaje);
+        return dataJson;
+      }
+
+      function loadSeries() {
+        var request = "/api/series";
+        var url = urlPS + request;
+
+        $.ajax({
+          url: url,
+          method: "GET",
+          dataType: "json",
+          success: function (data) {
+            $.each(data, function (index, serie) {
+              var option = $("<option>", {
+                text: serie.nombre,
+                value: serie.idSerie,
+              });
+
+              $("#series").append(option);
+            });
+          },
+        });
+      }
+
+      $(document).ready(function () {
+        $("#menu").load("menu.html");
+        loadSeries();
+
+        $("#createPersonaje").click(function () {
+          var request = "/api/Personajes";
+          var json = getJsonPersonaje();
+          var respuesta = `personajes.html?idSerie=${$("#series").val()}`;
+
+          $.ajax({
+            url: urlPS + request,
+            type: "POST",
+            contentType: "application/json",
+            data: json,
+            success: function () {
+              window.location.href = respuesta;
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

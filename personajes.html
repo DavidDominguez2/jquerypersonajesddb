@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personajes</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="menu"></div>
+    <div id="content"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/jquery-3.6.1.min.js"></script>
+
+    <script>
+      var urlPS = "https://apiseriespersonajes2022.azurewebsites.net";
+      var idSerie = window.location.search.substring(9);
+
+      function loadPersonajes() {
+        var request = "/api/Series/PersonajesSerie/" + idSerie;
+        var url = urlPS + request;
+
+        $.ajax({
+          url: url,
+          method: "GET",
+          dataType: "json",
+          success: function (data) {
+            var html = "";
+            html = `<div>
+            <a
+            class="btn btn-success my-4"
+            href="serie.html?idSerie=${idSerie}"
+            >
+            Volver
+            </a>
+            <table class="table align-middle">
+            <thead>
+                <tr>
+                <th>PERSONAJE</th>
+                <th>IMAGEN</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">`;
+            $.each(data, function (index, personaje) {
+              html += `<tr>
+                  <td>${personaje.nombre}</td>
+                  <td>
+                    <img src=${personaje.imagen} width= "100px" />
+                  </td>
+                </tr>`;
+            });
+            html += `</tbody></table></div>`;
+            $("#content").html(html);
+          },
+        });
+      }
+
+      $(document).ready(function () {
+        $("#menu").load("menu.html");
+        loadPersonajes();
+      });
+    </script>
+  </body>
+</html>
