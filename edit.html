@@ -131,14 +131,16 @@
 
         $("#editSerie").click(function () {
           var serie = $("#series").val();
-          var personaje = $("#personaje").val();
+          var personaje = $("#personajes").val();
 
           var request = "/api/Personajes/" + personaje + "/" + serie;
           var url = urlPS + request;
+
+          console.log(request);
           var respuesta = `personajes.html?idSerie=${$("#series").val()}`;
 
           $.ajax({
-            url: url + request,
+            url: url,
             type: "PUT",
             contentType: "application/json",
             success: function () {
